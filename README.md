@@ -5,6 +5,6 @@ It's not always easy to predict whether a bayesian sensor works as expected base
 
 It's a simple webpage: https://drake7707.github.io/hass-bayesian-debugger/
 
-Just paste in your binary sensor yaml and it will list all outcomes
+Just paste in your binary sensor yaml and it will list all outcomes and which combo's will actually trigger the sensor
 
 ![image](https://github.com/user-attachments/assets/74776ec7-abaf-4ed2-9c45-445017eb9058)
