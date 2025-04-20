@@ -1,0 +1,73 @@
+<html>
+
+<head>
+    <title>Home assistant Bayesian debugger</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel='stylesheet' href='main.css' />
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Home assistant Bayesian debugger</h1>
+
+                <form>
+                    <div class="form-group">
+                        <label>Enter your YAML here:</label>
+                        <textarea class="form-control" rows="20" id="yaml">
+
+binary_sensor:
+  - platform: "bayesian"
+    name: "in_bed"
+    unique_id: "172b6ef1-e37e-4f04-8d64-891e84c02b43" # generated on https://www.uuidgenerator.net/
+    prior: 0.3 # I spend 8 hours a day in bed 8hr/24hr
+    probability_threshold: 0.9 # I am going to be using this sensor to turn out the lights so I only want to to activate when I am sure
+    observations:
+      - platform: "state"
+        entity_id: "sun.sun"
+        prob_given_true: 0.7 # If I am in bed then there is a good chance the sun will be down, but in the summer mornings I may still be in bed
+        prob_given_false: 0.45 # If I am am awake then there is a reasonable chance the sun will be below the horizon - especially in winter
+        to_state: "below_horizon"
+
+      - platform: "state"
+        entity_id: "sensor.pixel_6a_charger_type"
+        prob_given_true: 0.95 # When I am in bed, I nearly always plug my phone in to charge
+        prob_given_false: 0.1 # When I am awake, I occasionally AC charge my phone
+        to_state: "ac"
+
+      - platform: "state"
+        entity_id: "binary_sensor.home_occupied"
+        prob_given_true: 0.99 # If i'm in bed i should be home
+        prob_given_false: 0.6 # When I'm awake, I am mostly also home
+        to_state: "on"
+
+      - platform: "state"
+        entity_id: "binary_sensor.sldesktop_local"
+        prob_given_true: 0.90 # If i'm in bed I'm not at my desktop
+        prob_given_false: 0.5 # When I am awake I am on my desktop about half the time
+        to_state: "off"
+
+      - platform: "state"
+        entity_id: "binary_sensor.mibox_local"
+        prob_given_true: 0.90 # If i'm in bed I won't be watching TV, so the Mi Box should be off
+        prob_given_false: 0.75 # When I am awake most of the time the TV is off
+        to_state: "off"
+
+                        </textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="run">List all probabilities</button>
+                </form>
+                <div id='table-container'>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src='main.js'></script>
+</body>
+
+</html>

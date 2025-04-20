@@ -1,0 +1,19 @@
+#yaml {
+    width:800px;
+    height:500px;
+    
+    font-family: "Courier";
+}
+
+td { 
+    
+    padding:5px;
+}
+
+.higher {
+    background-color: #0C0;
+}
+
+.lower {
+    background-color: #CC0;
+}
